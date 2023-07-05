@@ -1,0 +1,49 @@
+//Problem Statement-1 (1st Question)
+
+ORG 00H
+LJMP MAIN
+ORG 100H
+MAIN:
+ACALL ADD16
+HERE:
+SJMP HERE
+ADD16:
+CLR C
+MOV A,61H
+ADD A,63H
+MOV 66H,A
+MOV  A,60H
+ADDC A,62H
+MOV 65H,A
+MOV A,#00H
+ADDC A,#00H
+MOV 64H,A
+RET
+END
+
+//Problem Statement-1 (2nd Question)
+
+ORG 0000H 
+
+DELAY_LOOP:
+    MOV A, 71H 
+    JZ EXIT 
+
+DELAY_LOOP_2:
+    MOV R0, #250 
+    ACALL DELAY 
+    DJNZ A, DELAY_LOOP_2 
+    JMP DELAY_LOOP 
+
+DELAY:
+    MOV R1, #255 
+
+DELAY_LOOP_1:
+    DJNZ R1, DELAY_LOOP_1 
+    DJNZ R0, DELAY_LOOP_2 
+    RET 
+
+EXIT:
+    SJMP $ 
+
+END
