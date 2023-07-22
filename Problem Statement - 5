@@ -1,0 +1,126 @@
+//QUESTION - 1 
+
+#include <at89c5131.h>
+#include "lcd.h"
+
+code unsigned char display_msg1[]="IIT-BOMBAY-2023";					//Display msg on 1st line of lcd
+code unsigned char display_msg2[]="   GOKUL-S   ";						//Display msg on 1st line of lcd
+
+void main()
+{
+	lcd_init();
+	lcd_cmd(0x80);													//Move cursor to first line
+	msdelay(4);
+	lcd_write_string(display_msg1);
+	lcd_cmd(0xC0);													
+	msdelay(4);
+	lcd_write_string(display_msg2);
+	while(1);
+		
+}
+
+//QUESTION - 2
+
+#include <at89c5131.h>
+#include "lcd.h"
+void main()
+{
+	unsigned char ch1,ch2,s,arr[6],i=1,temp,str,prnt,ind,inc=0,j,k;
+	lcd_init();
+	lcd_write_string(" START PROGRAM  ");
+	P1=0x0F;
+	msdelay(5000);
+	lcd_cmd(0x01);
+	lcd_write_string("  FIRST INPUT   ");
+	msdelay(5000);
+	while(i!=6)
+	{
+	P1=P1&0X0F;
+	temp=P1;
+	P1=0X00;
+	msdelay(1000);
+  P1=temp;
+	arr[i]=P1;
+  ch1=P1&0X0F;
+	ch2=P1&0XF0;
+	ch1=ch1<<4;
+	ch2=ch2>>4;
+	s=ch1|ch2;
+	if(i==5)
+	{
+		P1=s;
+		lcd_cmd(0X01);
+		lcd_write_string("SORTING...");
+		msdelay(5000);
+		P1=0X0F;
+		lcd_cmd(0X01);
+		lcd_write_string("    SORTING     ");
+		lcd_cmd(0XC0);
+		lcd_write_string("   COMPLETED    ");
+		for(j=1;j<6;j++)
+		{
+			for(k=j+1;k<6;k++)
+			{
+			if(arr[j]>arr[k])
+			{
+				str=arr[j];
+				arr[j]=arr[k];
+				arr[k]=str;
+			}			
+		}			
+	}
+		for(j=1;j<6;j++)
+	{
+  prnt=arr[j];
+  ch1=prnt&0X0F;
+	ch2=prnt&0XF0;
+	ch1=ch1<<4;
+	ch2=ch2>>4;
+	s=ch1|ch2;
+	P1=s;
+	msdelay(5000);
+	P1=0X00;
+	msdelay(1000);
+	}
+	P1=0XFF;
+	lcd_cmd(0X01);
+	lcd_write_string("  NUMBER TO BE  ");
+	lcd_cmd(0XC0);
+	lcd_write_string("    SEARCHED    ");
+	msdelay(5000);
+	ch1=P1&0X0F;
+	lcd_cmd(0X01);
+	P1=0X00;
+	msdelay(1000);
+	for(j=1;j<6;j++)
+	{
+		if(arr[j]==ch)
+		{
+			inc++;
+			lcd_write_string("  THE INDEX IS  ");
+			ind=j<<4;
+			P1=ind;
+			while(1)
+			{
+			}
+		}
+	}
+	if(inc==0)
+	{
+		lcd_write_string("     NUMBER    ");
+		lcd_cmd(0XC0);
+		lcd_write_string("   NOT FOUND   ");
+		while(1)
+		{
+		}
+	}
+}
+	lcd_cmd(0X01);
+	lcd_write_string("    NEXT INPUT   ");
+  P1=s;
+	msdelay(5000);
+  P1=0x0F;
+	i++;
+	
+}
+}
