@@ -1,0 +1,90 @@
+//QUESTION - 1
+
+#include <at89c5131.h>
+sbit pin=P1^6;
+void delay1(void);
+void delay2(void);
+void main()
+{
+pin=0;
+while(1)
+{`	
+pin=0;
+delay2();
+pin=1;
+delay1();
+}
+}
+void delay1()
+{
+TMOD =0X10;
+  TH1=0XE0;
+TL1=0XC0;
+TR1=1;
+while(TF1!=1)
+{
+}
+TR1=0;
+TF1=0;
+}
+void delay2()
+{
+TMOD=0X10;
+TH1=0XA2;
+TL1=0X40;
+TR1=1;
+while(TF1!=1)
+{
+}
+TR1=0;
+TF1=0;
+}
+
+//QUESTION - 2
+
+#include <at89c5131.h>
+sbit outp1 = P1^6;
+sbit outp2 = P1^7;
+void timer0(void) interrupt 1	
+{
+	if(outp1==0){
+		outp1=1;
+	}
+	else{
+		outp1=0;
+	}
+	TH0 = 0xF0; 
+	TL0 = 0x06;
+  TR0 = 1;   
+}
+void timer1(void) interrupt 3	
+{
+	if(outp2==0){
+		outp2=1;
+	}
+	else{
+		outp2=0;
+	}
+	TH1 = 0XE8;
+	TL1 = 0X90;
+  TR1 = 1;   
+}
+void  main()
+{
+	   
+	TMOD = 0x11;  
+	EA = 1;  //activate global interrupts
+	ET1=1;
+	ET0=1;
+	TH0 = 0xF0; 
+	TL0 = 0x06;
+	TH1 = 0XE8;
+	TL1 = 0X90;
+	
+	outp1 = 0;  //Initial P1.6 to '0'
+	outp2 = 0;  //Initial P1.7/ to '0'
+	TR0 = 1;	// start timer
+	TR1 = 1;
+	while(1);
+		
+}
