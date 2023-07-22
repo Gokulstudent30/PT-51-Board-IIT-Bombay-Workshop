@@ -1,0 +1,181 @@
+#include <at89c5131.h>
+#include "lcd.h"
+
+#define OUT P1
+
+void MSDelay1(unsigned int value);
+
+unsigned char keypad[4][4] = {'1','2','3','A',
+	                            '4','5','6','B',
+	                            '7','8','9','C',
+															'*','0','#','D'};
+
+unsigned char password[] = {'1','5','A','8','*','D','6','#','\0'};
+unsigned char chkpswd[8];
+
+
+
+code unsigned char display_msg1[]="Wrong Password";						//Display msg on 1st line of lcd
+code unsigned char display_msg2[]="  Access Denied ";						//Display msg on 2nd line of lcd
+code unsigned char display_msg3[]="Correct Password";						//Display msg on 1st line of lcd
+code unsigned char display_msg4[]=" Access Granted ";						//Display msg on 2nd line of lcd
+code unsigned char display_msgP[]="Enter Password:";
+
+void main()
+{
+	unsigned char colloc,rowloc,output;
+	int i;
+	lcd_init();
+	lcd_write_string(display_msgP);
+	lcd_cmd(0xC0);
+	
+	P3 = 0x0F; //Input port
+	i=0;
+	do
+	{
+				P3 = 0x0F;
+				do
+				{
+					colloc = P3;
+					colloc &= 0x0F;
+			  }while(colloc != 0x0F); //check untill all keys release
+				///////////////////////////////////////////////////////////////////////////////////
+				do
+				{
+						do
+							{
+								MSDelay1(20);
+								colloc = P3;
+								colloc &= 0x0F;
+							}while(colloc == 0x0F);//check until any key pressed
+						
+						MSDelay1(20); //For debouncing
+						colloc = P3;
+						colloc &= 0x0F;
+				}while(colloc == 0x0F);
+		/////////////////////////////ROW LOCATION IDENTIFIER///////////////////////	
+				while(1)
+				{
+					
+					P3 = 0xEF;
+					colloc = P3;
+					colloc &= 0x0F;
+					if(colloc != 0x0F)
+					{
+						rowloc = 0;
+						break;				
+					}	
+					
+					P3 = 0xDF;
+					colloc = P3;
+					colloc &= 0x0F;
+					if(colloc != 0x0F)
+					{
+						rowloc = 1;
+						break;				
+					}
+					P3 = 0xBF;
+					colloc = P3;
+					colloc &= 0x0F;
+					if(colloc != 0x0F)
+					{
+						rowloc = 2;
+						break;				
+					}
+					P3 = 0x7F;
+					colloc = P3;
+					colloc &= 0x0F;
+					if(colloc != 0x0F)
+					{
+						rowloc = 3;
+						break;				
+					}
+					
+				}
+/////////////////////////////COL LOCATION IDENTIFIER///////////////////////		
+				if(colloc == 0x07)
+					output = keypad[rowloc][0];//fill here appropraitely indexed value from keypad table
+				else if(colloc == 0x0B)
+					output = keypad[rowloc][1];//fill here appropraitely indexed value from keypad table
+				else if(colloc == 0x0D)
+					output = keypad[rowloc][2]; //fill here appropraitely indexed value from keypad table
+				else
+					output = keypad[rowloc][3];//fill here appropraitely indexed value from keypad table
+///////////////////////////////// FoR PRINTING STUFF TO LEDS/////////////////////////////////
+				if(output == '0')
+					OUT = 0x0F;
+				else if(output == '1')
+					OUT = 0x1F;
+				else if(output == '2')
+					OUT = 0x2F;
+				else if(output == '3')
+					OUT = 0x3F;
+				else if(output == '4')
+					OUT = 0x4F;
+				else if(output == '5')
+					OUT = 0x5F;
+				else if(output == '6')
+					OUT = 0x6F;
+				else if(output == '7')
+					OUT = 0x7F;
+				else if(output == '8')
+					OUT = 0x8F;
+				else if(output == '9')
+					OUT = 0x9F;
+				else if(output == 'A')
+					OUT = 0xAF;
+				else if(output == 'B')
+					OUT = 0xBF;
+				else if(output == 'C')
+					OUT = 0xCF;
+				else if(output == 'D')
+					OUT = 0xDF;
+				else if(output == '*')
+					OUT = 0xEF;
+				else
+					// for '#'
+					OUT = 0xFF;
+				
+				lcd_write_char(output);
+				chkpswd[i] = output;
+				i++;	
+	
+	}while(i!=8);
+	
+	///////////////////////////////// FOR CHECKING PASSWORD AND PRINTING STUFF TO LCD/////////////////////////////////
+	i=7;	
+	MSDelay1(500);
+	lcd_cmd(0x01);	// LCD clear
+	msdelay(4);
+	lcd_cmd(0x80);	//Move cursor to Row 1 column 0
+	do
+	{		
+		if(chkpswd[i] != password[i])
+			break;
+		i--;			
+	}while(i!=-1);
+	
+	if(i!=-1)
+	{
+		lcd_write_string(display_msg1);
+		lcd_cmd(0xC0);
+		lcd_write_string(display_msg2);	
+	}
+	else
+	{
+		lcd_write_string(display_msg3);
+		lcd_cmd(0xC0);
+		lcd_write_string(display_msg4);
+	}
+	
+ while(1);	
+	
+}
+
+
+void MSDelay1 (unsigned int value)
+{
+	unsigned int x,y;
+	for(x=0;x<1275;x++)
+		for(y=0;y<value;y++);
+}
