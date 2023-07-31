@@ -1,0 +1,214 @@
+#include <at89c5131.h>
+#include "lcd.h"
+sbit pin=P0^7;
+char k;
+void wait_500ms1(void);
+void wait_500ms2(void);
+void wait_500ms3(void);
+void wait_750ms1(void);
+void wait_750ms2(void);
+void wait_1000ms1(void);
+void wait_1000ms2(void);
+void wait_1000ms3(void);
+
+void main()
+{
+	pin=0;
+	while(1)
+	{
+    wait_500ms1();
+		//msdelay(1000);
+		wait_500ms2();
+		//msdelay(1000);
+		wait_500ms3();
+		//msdelay(1000);
+		wait_750ms1();
+		//msdelay(1000);
+		wait_750ms2();
+		//msdelay(1000);
+		wait_1000ms1();
+		///msdelay(1000);
+		wait_1000ms2();
+		//msdelay(1000);
+		wait_1000ms3();
+		msdelay(1000);
+	
+}
+	
+}
+void wait_500ms1(void)
+{
+for(k=1;k<=16;k++)  //generating 500ms delay
+	{
+		TMOD =0X11;
+	  TH1=0X00;
+	  TL1=0X00;
+	  TR1=1;
+	while(TF1!=1)
+	{
+		TH0=0XF0;
+		TL0=0X60;
+		TR0=1;
+		while(TF0!=1)
+		{
+		}
+		pin=~pin;
+		TF0=0;
+	}
+	TF1=0;
+	}
+}
+void wait_500ms2(void)
+{
+for(k=1;k<=16;k++)  //generating 500ms delay
+	{
+		TMOD =0X11;
+	  TH1=0X00;
+	  TL1=0X00;
+	  TR1=1;
+	while(TF1!=1)
+	{
+		TH0=0XF1;
+		TL0=0X8C;
+		TR0=1;
+		while(TF0!=1)
+		{
+		}
+		pin=~pin;
+		TF0=0;
+	}
+	TF1=0;
+	}
+}
+void wait_500ms3(void)
+{
+for(k=1;k<=16;k++)  //generating 500ms delay
+	{
+		TMOD =0X11;
+	  TH1=0X00;
+	  TL1=0X00;
+	  TR1=1;
+	while(TF1!=1)
+	{
+		TH0=0XF3;
+		TL0=0X1C;
+		TR0=1;
+		while(TF0!=1)
+		{
+		}
+		pin=~pin;
+		TF0=0;
+	}
+	TF1=0;
+	}
+}
+void wait_750ms1(void)
+{
+		TMOD =0X11;
+		for(k=1;k<=24;k++)  //generating 750ms delay
+	{
+	  TH1=0X00;
+	  TL1=0X00;
+	  TR1=1;
+	while(TF1!=1)
+	{
+	  TH0=0XF3;
+		TL0=0XE4;
+		TR0=1;
+		while(TF0!=1)
+		{
+		}
+		pin=~pin;
+		TF0=0;
+	}
+	TF1=0;
+	}
+}
+void wait_750ms2(void)
+{
+		TMOD =0X11;
+		for(k=1;k<=24;k++)  //generating 750ms delay
+	{
+	  TH1=0X00;
+	  TL1=0X00;
+	  TR1=1;
+	while(TF1!=1)
+	{
+	  TH0=0XF5;
+		TL0=0X44;
+		TR0=1;
+		while(TF0!=1)
+		{
+		}
+		pin=~pin;
+		TF0=0;
+	}
+	TF1=0;
+	}
+}
+void wait_1000ms1(void)
+{
+		TMOD =0X11;
+		for(k=1;k<=31;k++)  //generating 1000ms delay
+	{
+	  TH1=0X00;
+	  TL1=0X00;
+	  TR1=1;
+		while(TF1!=1)
+	 {
+	  TH0=0XF6;
+		TL0=0X3C;
+		TR0=1;
+		while(TF0!=1)
+		{
+		}
+		pin=~pin;
+		TF0=0;
+	 }
+	TF1=0;
+	}
+}
+void wait_1000ms2(void)
+{
+		TMOD =0X11;
+		for(k=1;k<=31;k++)  //generating 1000ms delay
+	{
+	  TH1=0X00;
+	  TL1=0X00;
+	  TR1=1;
+		while(TF1!=1)
+	 {
+	  TH0=0XF7;
+		TL0=0X68;
+		TR0=1;
+		while(TF0!=1)
+		{
+		}
+		pin=~pin;
+		TF0=0;
+	 }
+	TF1=0;
+	}
+}
+void wait_1000ms3(void)
+{
+		TMOD =0X11;
+		for(k=1;k<=31;k++)  //generating 1000ms delay
+	{
+	  TH1=0X00;
+	  TL1=0X00;
+	  TR1=1;
+		while(TF1!=1)
+	 {
+	  TH0=0XF8;
+		TL0=0X30;
+		TR0=1;
+		while(TF0!=1)
+		{
+		}
+		pin=~pin;
+		TF0=0;
+	 }
+	TF1=0;
+	}
+}
